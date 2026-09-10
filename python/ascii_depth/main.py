@@ -139,11 +139,11 @@ class _DepthWorker(threading.Thread):
                 self._pending_frame = None
 
             if frame is None:
-                # No new frame yet — yield the CPU briefly rather than spinning.
+                # No new frame yet, yield the CPU briefly rather than spinning.
                 time.sleep(0.001)
                 continue
 
-            # Run inference.  This is the slow step (~50–100 ms on CPU).
+            # Run inference.  This is the slow step (~50-100 ms on CPU).
             depth = estimate_depth(frame, device=self._device)
 
             with self._lock:

@@ -1,10 +1,10 @@
-//! ascii_depth_rs — Rust extension module for fast depth-to-ASCII conversion.
+//! ascii_depth_rs, Rust extension module for fast depth-to-ASCII conversion.
 //!
 //! This crate is compiled into a native Python extension via PyO3 + maturin.
 //! It exposes two functions to the Python runtime:
 //!
-//!   - `normalize_depth(array)` — min-max normalise a 2D f32 array to [0, 1]
-//!   - `depth_to_ascii(array, width, height, charset)` — resample + map values to chars (near → dense)
+//!   - `normalize_depth(array)`, min-max normalise a 2D f32 array to [0, 1]
+//!   - `depth_to_ascii(array, width, height, charset)`, resample + map values to chars (near -> dense)
 //!
 //! Both functions release the Python GIL and use rayon for data-parallel work,
 //! so they run across all available CPU cores without blocking the interpreter.
@@ -21,8 +21,8 @@ use rayon::prelude::*;
 ///
 /// MiDaS outputs *inverse* depth (disparity), so after `normalize_depth` the
 /// values are already oriented as:
-///   - Near objects → depth ≈ 1.0 → high charset index → dense characters (`@`, `#`, …)
-///   - Far objects  → depth ≈ 0.0 → low charset index  → sparse characters (` `, `.`, …)
+///   - Near objects -> depth ≈ 1.0 -> high charset index -> dense characters (`@`, `#`, …)
+///   - Far objects  -> depth ≈ 0.0 -> low charset index  -> sparse characters (` `, `.`, …)
 ///
 /// No inversion is applied here; the mapping is direct.
 fn depth_to_char(depth: f32, charset: &[char]) -> char {
@@ -53,12 +53,12 @@ fn sample(
     dst_rows: usize,
     dst_cols: usize,
 ) -> f32 {
-    // Map destination row → source row, clamped to valid range.
+    // Map destination row -> source row, clamped to valid range.
     let sr = ((row as f32 + 0.5) / dst_rows as f32 * src_rows as f32 - 0.5)
         .round()
         .clamp(0.0, (src_rows - 1) as f32) as usize;
 
-    // Map destination column → source column, clamped to valid range.
+    // Map destination column -> source column, clamped to valid range.
     let sc = ((col as f32 + 0.5) / dst_cols as f32 * src_cols as f32 - 0.5)
         .round()
         .clamp(0.0, (src_cols - 1) as f32) as usize;
@@ -75,10 +75,10 @@ fn sample(
 /// value to a character from `charset`, returning one `String` per row.
 ///
 /// # Arguments
-/// * `depth_array` — 2D f32 numpy array, values expected in [0, 1].
-/// * `width`       — Number of character columns in the output grid.
-/// * `height`      — Number of character rows in the output grid.
-/// * `charset`     — String of characters ordered sparse → dense
+/// * `depth_array`, 2D f32 numpy array, values expected in [0, 1].
+/// * `width`, Number of character columns in the output grid.
+/// * `height`, Number of character rows in the output grid.
+/// * `charset`, String of characters ordered sparse -> dense
 ///                   (index 0 = far/background, last = near/foreground).
 ///
 /// # Returns

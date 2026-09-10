@@ -36,7 +36,7 @@ import torch
 # subsequent frame, avoiding the ~1-second load penalty per frame.
 
 _model: Optional[torch.nn.Module] = None
-_transform = None                           # callable: np.ndarray → Tensor
+_transform = None                           # callable: np.ndarray -> Tensor
 _device: Optional[torch.device] = None
 
 
@@ -146,6 +146,6 @@ def estimate_depth(
             size=(bgr_frame.shape[0], bgr_frame.shape[1]),   # target: H × W
             mode="bicubic",
             align_corners=False,
-        ).squeeze()  # remove batch + channel dims → shape (H, W)
+        ).squeeze()  # remove batch + channel dims -> shape (H, W)
 
     return prediction.cpu().numpy().astype(np.float32)
