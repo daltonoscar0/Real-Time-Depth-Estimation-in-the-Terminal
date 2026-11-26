@@ -1,7 +1,7 @@
 # ascii-depth
 
 Real-time terminal ASCII depth map renderer.
-Point your webcam at anything and watch a live white-on-black depth heatmap render in your terminal — near objects appear as bright white dense characters; far objects fade to black.
+Point your webcam at anything and watch a live white-on-black depth heatmap render in your terminal, near objects appear as bright white dense characters; far objects fade to black.
 
 ```
 Near  →  @ # % * +  →  bright white
@@ -43,11 +43,11 @@ Built with **MiDaS_small** (monocular depth estimation) and a **Rust extension**
 
 ### Why a background thread?
 
-MiDaS inference takes ~50–100 ms on CPU.  Running it synchronously would block the display for every frame, capping output at ~10–20 FPS.  A dedicated `_DepthWorker` daemon thread runs inference continuously on the most recently captured frame.  The render loop always uses the latest available depth result without waiting, so the terminal updates as fast as the Rust renderer can write — typically 25–35 FPS on CPU.
+MiDaS inference takes ~50-100 ms on CPU.  Running it synchronously would block the display for every frame, capping output at ~10-20 FPS.  A dedicated `_DepthWorker` daemon thread runs inference continuously on the most recently captured frame.  The render loop always uses the latest available depth result without waiting, so the terminal updates as fast as the Rust renderer can write, typically 25-35 FPS on CPU.
 
 ### Why Rust for the ASCII mapping?
 
-The depth array at 640×480 contains ~300 k values that must be resampled to the terminal grid, looked up in a character table, and colour-escaped — every frame, 25–35 times per second.  The Rust extension releases the Python GIL and processes all rows in parallel with [rayon](https://github.com/rayon-rs/rayon), keeping the mapping step under 2 ms regardless of terminal size.
+The depth array at 640×480 contains ~300 k values that must be resampled to the terminal grid, looked up in a character table, and colour-escaped, every frame, 25-35 times per second.  The Rust extension releases the Python GIL and processes all rows in parallel with [rayon](https://github.com/rayon-rs/rayon), keeping the mapping step under 2 ms regardless of terminal size.
 
 ---
 
@@ -65,19 +65,19 @@ A webcam accessible at `/dev/video0` (Linux) or the system default (macOS / Wind
 
 ## Installation
 
-### 1 — Install Rust
+### 1, Install Rust
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-### 2 — Install maturin
+### 2, Install maturin
 
 ```bash
 pip install maturin
 ```
 
-### 3 — Build the Rust extension
+### 3, Build the Rust extension
 
 ```bash
 cd ascii_depth
@@ -86,7 +86,7 @@ maturin develop --release
 
 This compiles `src/lib.rs` into a native `.so` / `.pyd` extension and installs the whole `ascii_depth` Python package in editable mode.  The `--release` flag enables full optimisation (LTO, opt-level 3).
 
-### 4 — Install Python dependencies
+### 4, Install Python dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -94,13 +94,13 @@ pip install -r requirements.txt
 
 > **GPU acceleration:** swap the `torch` line in `requirements.txt` for the appropriate CUDA wheel from [pytorch.org/get-started/locally](https://pytorch.org/get-started/locally/).  Set `--device cuda` when running.
 
-### 5 — Run
+### 5, Run
 
 ```bash
 python -m ascii_depth.main
 ```
 
-Press **Ctrl-C** to quit.  The terminal cursor and colours are restored automatically.  Closing the terminal window also triggers a clean shutdown — the camera is always released before the process exits.
+Press **Ctrl-C** to quit.  The terminal cursor and colours are restored automatically.  Closing the terminal window also triggers a clean shutdown, the camera is always released before the process exits.
 
 ---
 
@@ -115,13 +115,13 @@ Press **Ctrl-C** to quit.  The terminal cursor and colours are restored automati
 | `--device` | auto | `cpu` or `cuda` |
 | `--camera` | `0` | Camera device index |
 
-Example — lower resolution for slower machines:
+Example, lower resolution for slower machines:
 
 ```bash
 python -m ascii_depth.main --width 80 --height 40 --fps 15
 ```
 
-Example — richer character ramp:
+Example, richer character ramp:
 
 ```bash
 python -m ascii_depth.main --charset " ░▒▓█"
@@ -152,9 +152,9 @@ ascii_depth/
 
 | Stage | CPU (Apple M-series / modern x86) | CUDA GPU |
 |---|---|---|
-| MiDaS_small inference | ~15–25 FPS | ~30+ FPS |
+| MiDaS_small inference | ~15-25 FPS | ~30+ FPS |
 | Rust normalise + map | < 2 ms | < 2 ms |
-| Terminal render (display FPS) | ~25–35 FPS | ~25–35 FPS |
+| Terminal render (display FPS) | ~25-35 FPS | ~25-35 FPS |
 
 Display FPS is decoupled from inference FPS by the background thread.  The terminal updates whenever a new depth result is ready, reusing the previous result between inference cycles.
 
@@ -162,7 +162,7 @@ Display FPS is decoupled from inference FPS by the background thread.  The termi
 
 ## Customisation tips
 
-- **Different depth model:** edit `depth.py` — change `"MiDaS_small"` to `"DPT_Large"` and `small_transform` to `dpt_transform` for higher accuracy at ~4× the CPU cost.
+- **Different depth model:** edit `depth.py`, change `"MiDaS_small"` to `"DPT_Large"` and `small_transform` to `dpt_transform` for higher accuracy at ~4× the CPU cost.
 - **Colour scheme:** edit the `_white()` function in `renderer.py` to change the RGB values in the ANSI escape (e.g. set `R=0, B=0` for green, or `R=G=0` for blue).
 - **Character set:** any ordered string works as `--charset`; block elements (`░▒▓█`) or Braille patterns can give a denser look on capable terminals.
 

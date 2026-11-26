@@ -35,7 +35,7 @@ import numpy as np
 
 from ascii_depth import ascii_depth_rs  # compiled Rust extension
 
-# Default character ramp: sparse (far/dark) → dense (near/bright).
+# Default character ramp: sparse (far/dark) -> dense (near/bright).
 # Index 0 is a space so fully-far pixels are invisible against a black terminal.
 DEFAULT_CHARSET = " .:-=+*#%@"
 
@@ -110,7 +110,7 @@ def render_frame(
 
     # --- Step 2: resample + character mapping via Rust ---
     # Each of the `height` strings is `width` characters wide.
-    # Near pixels → dense chars; far pixels → spaces (charset index 0).
+    # Near pixels -> dense chars; far pixels -> spaces (charset index 0).
     rows: list[str] = ascii_depth_rs.depth_to_ascii(normed, width, height, charset)
 
     # --- Step 3: build the full frame string ---
@@ -128,7 +128,7 @@ def render_frame(
             int((col_centre + 0.5) / width  * normed.shape[1]),
         ])
         # brightness is already in [0, 1] with near=1.0, so pass it directly:
-        # no inversion needed here — the Rust extension handles charset ordering.
+        # no inversion needed here, the Rust extension handles charset ordering.
         buf_parts.append(_white(row_text, brightness))
         buf_parts.append("\n")
 
