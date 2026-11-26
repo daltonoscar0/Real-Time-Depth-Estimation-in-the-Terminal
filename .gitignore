@@ -1,0 +1,25 @@
+# Rust build output
+/target/
+**/*.rs.bk
+
+# The compiled pyo3 extension, built from src/lib.rs by maturin.
+# Platform- and interpreter-specific; build it with `maturin develop`.
+*.so
+*.dylib
+*.pyd
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Model weights and captures (fetched or generated, not source)
+*.onnx
+*.pt
+*.pth
+
+# macOS
+.DS_Store
