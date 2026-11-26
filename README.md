@@ -165,3 +165,7 @@ Display FPS is decoupled from inference FPS by the background thread.  The termi
 - **Different depth model:** edit `depth.py`, change `"MiDaS_small"` to `"DPT_Large"` and `small_transform` to `dpt_transform` for higher accuracy at ~4× the CPU cost.
 - **Colour scheme:** edit the `_white()` function in `renderer.py` to change the RGB values in the ANSI escape (e.g. set `R=0, B=0` for green, or `R=G=0` for blue).
 - **Character set:** any ordered string works as `--charset`; block elements (`░▒▓█`) or Braille patterns can give a denser look on capable terminals.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
